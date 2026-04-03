@@ -1,7 +1,6 @@
 const formAccessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "";
 const navigation = document.querySelector(".site-navigation");
 const menuToggle = document.querySelector(".menu-toggle");
-const dropdownItems = document.querySelectorAll("[data-dropdown]");
 const emailDropdown = document.querySelector("[data-email-dropdown]");
 const emailButton = emailDropdown?.querySelector("button");
 const copyEmailButtons = document.querySelectorAll("[data-copy-email]");
@@ -16,48 +15,9 @@ const setMenuState = (isOpen) => {
   menuToggle.setAttribute("aria-expanded", String(isOpen));
 };
 
-const closeDropdowns = () => {
-  dropdownItems.forEach((item) => {
-    item.classList.remove("is-open");
-    const trigger = item.querySelector(".dropdown-trigger");
-    trigger?.setAttribute("aria-expanded", "false");
-  });
-};
-
 menuToggle?.addEventListener("click", () => {
   const isOpen = !navigation?.classList.contains("is-open");
   setMenuState(Boolean(isOpen));
-});
-
-dropdownItems.forEach((item) => {
-  const trigger = item.querySelector(".dropdown-trigger");
-
-  trigger?.addEventListener("click", () => {
-    const isMobile = window.innerWidth <= 960;
-
-    if (!isMobile) {
-      const nextState = !item.classList.contains("is-open");
-      closeDropdowns();
-      item.classList.toggle("is-open", nextState);
-      trigger.setAttribute("aria-expanded", String(nextState));
-      return;
-    }
-
-    const nextState = !item.classList.contains("is-open");
-    item.classList.toggle("is-open", nextState);
-    trigger.setAttribute("aria-expanded", String(nextState));
-  });
-});
-
-document.addEventListener("click", (event) => {
-  if (!event.target.closest("[data-dropdown]")) {
-    closeDropdowns();
-  }
-
-  if (!event.target.closest("[data-email-dropdown]")) {
-    emailDropdown?.classList.remove("is-open");
-    emailButton?.setAttribute("aria-expanded", "false");
-  }
 });
 
 window.addEventListener("resize", () => {
@@ -70,6 +30,13 @@ emailButton?.addEventListener("click", () => {
   const nextState = !emailDropdown.classList.contains("is-open");
   emailDropdown.classList.toggle("is-open", nextState);
   emailButton.setAttribute("aria-expanded", String(nextState));
+});
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest("[data-email-dropdown]")) {
+    emailDropdown?.classList.remove("is-open");
+    emailButton?.setAttribute("aria-expanded", "false");
+  }
 });
 
 copyEmailButtons.forEach((button) => {
